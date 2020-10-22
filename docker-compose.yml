@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+
+  
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports: 
+      - "8000:8000"
+    volumes:
+      - "./frontend:/src/frontend"
+      - "./frontend/node_modules:/src/frontend/node_modules"
+    depends_on: 
+      - backend
+    networks:
+      - network-film
+  
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports: 
+      - "3000:3000"
+    volumes:
+      - "./backend:/src/backend"
+      - "./backend/node_modules:/src/backend/node_modules"
+    depends_on: 
+      - mongodb
+    networks:
+      - network-film
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:3.4
+    volumes: 
+      - "./data-db:/data/db"
+    ports: 
+      - "27017:27017"
+    networks:
+      - network-film
+
+networks:
+  network-film:
+    driver: bridge
+
+volumes:
+  data-db:
+  backend:
+  frontend:
